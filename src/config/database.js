@@ -1,16 +1,20 @@
 const { Sequelize } = require("sequelize");
-require("dotenv").config();
+
+const isTest = process.env.NODE_ENV === "test";
 
 const sequelize = new Sequelize({
-  dialect: process.env.DB_DIALECT,
-  storage: process.env.DB_STORAGE,
+  dialect: "sqlite",
+  storage: isTest ? ":memory:" : "event.db",
   logging: false,
-  retry: {
-    max: 5, // retry 5 times if DB is busy
-  },
   dialectOptions: {
-    timeout: 20000, // wait longer before giving up
+    timeout: 10000, // wait up to 10s before SQLITE_BUSY
   },
 });
+
+// Enable WAL mode for concurrent writes
+sequelize
+  .query("PRAGMA journal_mode = WAL;")
+  .then(() => sequelize.query("PRAGMA busy_timeout = 10000;"))
+  .catch((err) => console.error("Failed to set WAL mode:", err));
 
 module.exports = sequelize;

@@ -9,6 +9,11 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(eventRoutes);
 
+// Force an error route
+app.get("/error", (req, res, next) => {
+  next(new Error("Test error"));
+});
+
 app.use(errorHandler);
 app.get("/", (req, res) => {
   res.json({ message: "Event Booking API running..." });

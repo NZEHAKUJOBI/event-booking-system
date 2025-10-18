@@ -6,6 +6,7 @@ const {
   cancelBooking,
   getEventStatus,
 } = require("../controllers/eventController");
+const basicAuth = require("../middleware/basicAuth");
 
 /**
  * @swagger
@@ -20,7 +21,7 @@ const {
  *           schema:
  *             type: object
  *             properties:
- *               eventName:
+ *               name:
  *                 type: string
  *               totalTickets:
  *                 type: integer
@@ -30,7 +31,7 @@ const {
  *       400:
  *         description: Invalid input
  */
-router.post("/initialize", initializeEvent);
+router.post("/initialize", basicAuth, initializeEvent);
 
 /**
  * @swagger
@@ -82,7 +83,7 @@ router.post("/book", bookTicket);
  *       404:
  *         description: Booking not found
  */
-router.post("/cancel", cancelBooking);
+router.post("/cancel", basicAuth, cancelBooking);
 
 /**
  * @swagger

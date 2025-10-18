@@ -1,30 +1,41 @@
 const express = require("express");
-const app = express();
-const eventRoutes = require("./routes/eventRoutes");
-const errorHandler = require("./middleware/errorHandler");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
+const setupSwagger = require("./config/swagger");
+const eventRoutes = require("./routes/eventRoutes");
+const errorHandler = require("./middleware/errorHandler");
 
-app.use(morgan("dev"));
+const app = express();
+
+// === Middleware ===
 app.use(express.json());
-app.use(eventRoutes);
+app.use(morgan("dev"));
 
-// Force an error route
-app.get("/error", (req, res, next) => {
-  next(new Error("Test error"));
+// === Rate Limiting (apply early to all routes) ===
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 10, // limit each IP to 10 requests per windowMs
+  message: { message: "Too many requests, try again later." },
 });
+app.use(limiter);
 
-app.use(errorHandler);
+// === Routes ===
 app.get("/", (req, res) => {
   res.json({ message: "Event Booking API running..." });
 });
 
-const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 10, // max 10 requests per minute per IP
-  message: { message: "Too many requests, try again later." },
+app.use("/", eventRoutes);
+
+// === Swagger Docs ===
+setupSwagger(app);
+
+// === Logging (optional custom log per request) ===
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
 });
 
-app.use(limiter);
+// === Global Error Handler ===
+app.use(errorHandler);
 
 module.exports = app;

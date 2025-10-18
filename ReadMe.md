@@ -4,18 +4,25 @@ A RESTful API demonstrating **concurrency-safe ticket booking** with waiting lis
 
 ---
 
-## Features
+🚀 Features
 
-- Initialize events with limited ticket counts
-- Book tickets with automatic waiting list when sold out
-- Cancel bookings with automatic reassignment to waiting users
-- View real-time event status (available + waiting list count)
-- Thread-safe transactions using SQLite WAL mode
-- Full **TDD (Jest + Supertest)** with >85% coverage
-- **Rate limiting** and **Basic Authentication** for secure endpoints
-- Centralized **error handling** and structured **logging**
-- Fully interactive **Swagger documentation** at  
-  **[http://localhost:4000/api-docs/](http://localhost:4000/api-docs/)**
+Initialize events with limited ticket counts
+
+Book tickets with automatic waiting list when sold out
+
+Cancel bookings with automatic reassignment
+
+View event status (available + waiting list count)
+
+Thread-safe SQLite using WAL mode
+
+TDD (Jest + Supertest) with >85% coverage
+
+Basic Authentication and rate limiting for sensitive operations
+
+Centralized error handling and structured logging
+
+Interactive Swagger Docs → http://localhost:4000/api-docs
 
 ---
 
@@ -25,22 +32,23 @@ A RESTful API demonstrating **concurrency-safe ticket booking** with waiting lis
 
 src/
 ┣ config/
-┃ ┣ database.js # Sequelize + SQLite configuration
-┃ ┗ swagger.js # Swagger (OpenAPI 3.0) configuration
+┃ ┣ database.js # Sequelize + SQLite setup
+┃ ┗ swagger.js # Swagger (OpenAPI 3.0)
 ┣ controllers/
-┃ ┗ eventController.js # Core booking and cancellation logic
+┃ ┗ eventController.js
 ┣ middleware/
-┃ ┗ errorHandler.js # Global error handler
+┃ ┣ basicAuth.js # Basic Authentication
+┃ ┗ errorHandler.js # Global error handling
 ┣ models/
 ┃ ┣ Event.js
 ┃ ┣ Booking.js
 ┃ ┗ WaitingList.js
 ┣ routes/
-┃ ┗ eventRoutes.js # API route definitions
+┃ ┗ eventRoutes.js
 ┣ tests/
-┃ ┗ \*.test.js # Jest + Supertest test suites
-┣ app.js # Express app setup
-┗ server.js # Entry point
+┃ ┗ \*.test.js
+┣ app.js
+┗ server.js
 
 ## 🧭 Quick Start
 
@@ -65,4 +73,6 @@ npm run dev
 
 # 5️⃣ Run all tests
 npm test
+
+
 ```
